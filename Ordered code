@@ -1,21 +1,21 @@
---Creating the tables
+--First, we created the tables
   
   CREATE TABLE IF NOT EXISTS Customers (
 	UserId TEXT PRIMARY KEY,
-	Location TEXT)
+	Location TEXT);
   
   CREATE TABLE IF NOT EXISTS Orders (
 	BillingId TEXT PRIMARY KEY,
 	ProdDescription TEXT NOT NULL,
 	UserId TEXT,
-	ProductId TEXT NOT NULL)
+	ProductId TEXT NOT NULL);
   
   CREATE TABLE IF NOT EXISTS Products (
 	ProductId TEXT PRIMARY KEY,
 	Category TEXT NOT NULL,
 	SubCategory TEXT NOT NULL,
 	Brand TEXT NOT NULL,
-	ProdDescription TEXT NOT NULL)
+	ProdDescription TEXT NOT NULL);
   
   CREATE TABLE IF NOT EXISTS Reviews (
 	UniqId TEXT PRIMARY KEY,
@@ -26,12 +26,12 @@
 	HelpfulR TEXT,
 	UserId TEXT NOT NULL,
   BillingId TEXT NOT NULL,
-  ProductId TEXT NOT NULL)
+  ProductId TEXT NOT NULL);
   
-  --Temporary tables and cleaning data
-  DELETE FROM amazon
+  --Next, we create temporary tables for the purpose of cleaning up the data set before inserting it into the database
+DELETE FROM amazon
 WHERE
-  (UniqId IS NULL OR UniqId  = '')
+  (UniqId IS NULL OR UniqId  = '');
   
  CREATE TABLE temp_products AS
 SELECT  DISTINCT
@@ -42,14 +42,14 @@ SELECT  DISTINCT
    SubCategory,
    Brand,
    ProdDescription
-FROM amazon
+FROM amazon;
 
 DELETE FROM temp_products
 WHERE
   (Category IS NULL OR Category  = '')
   OR (Brand IS NULL OR Brand = '')
   OR (SubCategory IS NULL OR SubCategory = '')
-  OR (ProdDescription IS NULL OR ProdDescription = '')
+  OR (ProdDescription IS NULL OR ProdDescription = '');
   
 CREATE TABLE IF NOT EXISTS temp_reviews (
 	UniqId TEXT PRIMARY KEY,
@@ -60,15 +60,15 @@ CREATE TABLE IF NOT EXISTS temp_reviews (
 	HelpfulR TEXT,
 	UserId TEXT NOT NULL,
   BillingId TEXT NOT NULL,
-  ProductId TEXT NOT NULL)
+  ProductId TEXT NOT NULL);
   
 INSERT INTO temp_reviews(UniqId, RTitle, RMonth, RRating, RContent, HelpfulR, UserId, BillingId, ProductId)
 SELECT UniqId, RTitle, RMonth, RRating, RContent, HelpfulR, UserId, BillingID, ProductID
-FROM amazon
+FROM amazon;
 
 DELETE FROM temp_reviews
 WHERE
-  (UniqId IS NULL OR UniqId  = '')
+  (UniqId IS NULL OR UniqId  = '');
   
 CREATE TABLE temp_orders AS
 SELECT  
@@ -80,15 +80,19 @@ SELECT
    ) AS 'BillingId',  
    UserId,
    ProdDescription
-FROM amazon
+FROM amazon;
 
 DELETE FROM temp_orders
 WHERE
   (UserId IS NULL OR UserId  = '')
   OR (ProductId IS NULL OR ProductId = '')
-  OR (ProdDescription IS NULL OR ProdDescription = '')
+  OR (ProdDescription IS NULL OR ProdDescription = '');
   
-  --Triggers
+  --We added in triggers to mimick a real-life database
+  --Triggers were added in before inserting data to make sure the data we were inserting followed the database rules we have set in place
+  
+  
+  --Trigger 1 - RRating can only take values between 1 and 5
   CREATE TRIGGER bef_update_RRating BEFORE UPDATE ON Reviews
 BEGIN
 	SELECT CASE
@@ -97,6 +101,8 @@ BEGIN
 END;
 END;
 
+
+--Trigger 2 - Ensuring each order can only have one review
 CREATE TRIGGER bef_insert_review BEFORE INSERT ON Reviews
 BEGIN
 	SELECT CASE
@@ -105,6 +111,7 @@ BEGIN
 END;
 END;
 
+--Trigger 3 - When inserting new foreign key value, the new keys must match a primary key
 CREATE TRIGGER bef_insert_orders_UserId BEFORE INSERT ON Orders
 BEGIN
 	SELECT CASE
@@ -145,6 +152,7 @@ BEGIN
 END;
 END;
 
+--Trigger 4 - Records are not allowed to be deleted
 CREATE TRIGGER bef_delete_1 BEFORE DELETE ON Customers
 BEGIN
 	SELECT RAISE(ABORT, 'ERROR: Records cannot be deleted.');
@@ -165,24 +173,71 @@ BEGIN
 	SELECT RAISE(ABORT, 'ERROR: Records cannot be deleted.');
 END;
 
---Inserting values
+--Now, we insert the values into the database
 INSERT INTO Customers (UserId, Location)
 SELECT UserId, Location
-FROM amazon
+FROM amazon;
 
 DELETE FROM Customers
 WHERE
-  (UserId IS NULL OR UserId  = '')
+  (UserId IS NULL OR UserId  = '');
   
 INSERT INTO Products(ProductId, Category, SubCategory, Brand, ProdDescription)
 SELECT    ProductId, Category, SubCategory, Brand, ProdDescription
-FROM temp_products
-
-DROP TABLE temp_products
+FROM temp_products;
 
 INSERT INTO Orders(BillingId, ProdDescription, UserId, ProductId)
 SELECT    BillingId, ProdDescription, UserId, ProductId
-FROM temp_orders
+FROM temp_orders;
 
-DROP TABLE temp_orders
+INSERT INTO Reviews(UniqId, RTitle, RMonth, RRating,RContent,HelpfulR,UserId,BillingId,ProductId)
+SELECT temp_reviews.UniqId, temp_reviews.RTitle, temp_reviews.RMonth, temp_reviews.RRating, temp_reviews.RContent, temp_reviews.HelpfulR, temp_reviews.UserId, Orders.BillingId, Orders.ProductId 
+FROM temp_reviews
+JOIN Orders ON temp_reviews.UserId = Orders.UserId;
+
+DROP TABLE temp_orders;
+DROP TABLE temp_products;
+DROP TABLE temp_reviews;
+DROP TABLE amazon;
+
+--Now, we double-check that all our restrictions are working
+
+--Testing trigger 1(Lower bound)
+UPDATE Reviews
+   SET RRating = -5
+ WHERE UniqID = "1627ee2055d36db00459430b5ec3790d";
+ 
+ --Testing trigger 1 (Upper bound)
+ UPDATE Reviews
+   SET RRating = 10
+ WHERE UniqID = "1627ee2055d36db00459430b5ec3790d";
+ 
+ --Testing trigger 2 - Inserting another review for an order with an existing review should raise an error
+ INSERT INTO Reviews
+VALUES ('9999ee2055d36db00459430b5ec3790dnew', 'None', 'July', 5.0, 'Like it', 0, 'AECRD4GDEG7RBMTQDOXCEN6NT74Q', '141', '1');
+
+--Testing trigger 3 - Inserting a UserId which does not exist as a PK elsewhere in the Orders table
+INSERT INTO Orders
+VALUES ('9000000000000','Desc','TestID','1');
+
+--Testing trigger 3 - Inserting a ProductId which does not exist as a PK elsewhere in the Orders table
+INSERT INTO Orders
+VALUES ('9000000000000','Desc','AFUNJ4TSQOUYJ7CYJ24MYKCH3QDQ','TestID');
+
+--Testing trigger 3 - Inserting a UserId which does not exist as a PK elsewhere in the Reviews table
+INSERT INTO Reviews
+VALUES ('New test','Title','June',4.0,'OK','5','TestID','141','1');
+
+--Testing trigger 3 - Inserting a BillingId which does not exist as a PK elsewhere in the Reviews table
+INSERT INTO Reviews
+VALUES ('New test','Title','June',4.0,'OK','5','AECRD4GDEG7RBMTQDOXCEN6NT74Q','TestID','1');
+
+--Testing trigger 3 - Inserting a ProductId which does not exist as a PK elsewhere in the Reviews table
+INSERT INTO Reviews
+VALUES ('New test','Title','June',4.0,'OK','5','AECRD4GDEG7RBMTQDOXCEN6NT74Q','142','TestID');
+
+--Testing trigger 4
+DELETE FROM Customers;
+
+
 
