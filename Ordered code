@@ -1,0 +1,188 @@
+--Creating the tables
+  
+  CREATE TABLE IF NOT EXISTS Customers (
+	UserId TEXT PRIMARY KEY,
+	Location TEXT)
+  
+  CREATE TABLE IF NOT EXISTS Orders (
+	BillingId TEXT PRIMARY KEY,
+	ProdDescription TEXT NOT NULL,
+	UserId TEXT,
+	ProductId TEXT NOT NULL)
+  
+  CREATE TABLE IF NOT EXISTS Products (
+	ProductId TEXT PRIMARY KEY,
+	Category TEXT NOT NULL,
+	SubCategory TEXT NOT NULL,
+	Brand TEXT NOT NULL,
+	ProdDescription TEXT NOT NULL)
+  
+  CREATE TABLE IF NOT EXISTS Reviews (
+	UniqId TEXT PRIMARY KEY,
+	RTitle TEXT,
+	RMonth TEXT,
+	RRating TEXT,
+	RContent TEXT,
+	HelpfulR TEXT,
+	UserId TEXT NOT NULL,
+  BillingId TEXT NOT NULL,
+  ProductId TEXT NOT NULL)
+  
+  --Temporary tables and cleaning data
+  DELETE FROM amazon
+WHERE
+  (UniqId IS NULL OR UniqId  = '')
+  
+ CREATE TABLE temp_products AS
+SELECT  DISTINCT
+   RANK() OVER (
+      ORDER BY ProdDescription desc
+   ) AS 'ProductId', 
+   Category, 
+   SubCategory,
+   Brand,
+   ProdDescription
+FROM amazon
+
+DELETE FROM temp_products
+WHERE
+  (Category IS NULL OR Category  = '')
+  OR (Brand IS NULL OR Brand = '')
+  OR (SubCategory IS NULL OR SubCategory = '')
+  OR (ProdDescription IS NULL OR ProdDescription = '')
+  
+CREATE TABLE IF NOT EXISTS temp_reviews (
+	UniqId TEXT PRIMARY KEY,
+	RTitle TEXT,
+	RMonth TEXT,
+	RRating TEXT,
+	RContent TEXT,
+	HelpfulR TEXT,
+	UserId TEXT NOT NULL,
+  BillingId TEXT NOT NULL,
+  ProductId TEXT NOT NULL)
+  
+INSERT INTO temp_reviews(UniqId, RTitle, RMonth, RRating, RContent, HelpfulR, UserId, BillingId, ProductId)
+SELECT UniqId, RTitle, RMonth, RRating, RContent, HelpfulR, UserId, BillingID, ProductID
+FROM amazon
+
+DELETE FROM temp_reviews
+WHERE
+  (UniqId IS NULL OR UniqId  = '')
+  
+CREATE TABLE temp_orders AS
+SELECT  
+   RANK() OVER (
+      ORDER BY ProdDescription desc
+   ) AS 'ProductId', 
+      row_number() OVER (
+      ORDER BY BillingId desc
+   ) AS 'BillingId',  
+   UserId,
+   ProdDescription
+FROM amazon
+
+DELETE FROM temp_orders
+WHERE
+  (UserId IS NULL OR UserId  = '')
+  OR (ProductId IS NULL OR ProductId = '')
+  OR (ProdDescription IS NULL OR ProdDescription = '')
+  
+  --Triggers
+  CREATE TRIGGER bef_update_RRating BEFORE UPDATE ON Reviews
+BEGIN
+	SELECT CASE
+	WHEN ((SELECT Reviews.RRating FROM Reviews WHERE NEW.RRating < 1 OR NEW.RRating > 5) IS NOT NULL)
+	THEN RAISE(FAIL, 'ERROR: Invalid rating score.')
+END;
+END;
+
+CREATE TRIGGER bef_insert_review BEFORE INSERT ON Reviews
+BEGIN
+	SELECT CASE
+	WHEN ((SELECT Reviews.BillingID FROM Reviews WHERE Reviews.BillingID = NEW.BillingID) IS NOT NULL)
+	THEN RAISE(FAIL, 'ERROR: This order already has a review.')
+END;
+END;
+
+CREATE TRIGGER bef_insert_orders_UserId BEFORE INSERT ON Orders
+BEGIN
+	SELECT CASE
+	WHEN ((SELECT COUNT(UserId) FROM Customers WHERE Customers.UserId = NEW.UserId) = 0)
+	THEN RAISE(FAIL, 'ERROR: Foreign key violation: This UserId does not have a matching record in the database.')
+END;
+END;
+
+CREATE TRIGGER bef_insert_orders_ProductId BEFORE INSERT ON Orders
+BEGIN
+	SELECT CASE
+	WHEN ((SELECT COUNT(ProductId) FROM Products WHERE Products.ProductId = NEW.ProductId) = 0)
+	THEN RAISE(FAIL, 'ERROR: Foreign key violation: This ProductId does not have a matching record in the database.')
+END;
+END;
+
+CREATE TRIGGER bef_insert_reviews_UserId BEFORE INSERT ON Reviews
+BEGIN
+	SELECT CASE
+	WHEN ((SELECT COUNT(UserId) FROM Customers WHERE Customers.UserId = NEW.UserId) = 0)
+	THEN RAISE(FAIL, 'ERROR: Foreign key violation: This UserId does not have a matching record in the database.')
+END;
+END;
+
+CREATE TRIGGER bef_insert_reviews_BillingId BEFORE INSERT ON Reviews
+BEGIN
+	SELECT CASE
+	WHEN ((SELECT COUNT(BillingId) FROM Orders WHERE Orders.BillingId = NEW.BillingId) = 0)
+	THEN RAISE(FAIL, 'ERROR: Foreign key violation: This BillingId does not have a matching record in the database.')
+END;
+END;
+
+CREATE TRIGGER bef_insert_reviews_ProductId BEFORE INSERT ON Reviews
+BEGIN
+	SELECT CASE
+	WHEN ((SELECT COUNT(ProductId) FROM Products WHERE Products.ProductId = NEW.ProductId) = 0)
+	THEN RAISE(FAIL, 'ERROR: Foreign key violation: This ProductId does not have a matching record in the database.')
+END;
+END;
+
+CREATE TRIGGER bef_delete_1 BEFORE DELETE ON Customers
+BEGIN
+	SELECT RAISE(ABORT, 'ERROR: Records cannot be deleted.');
+END;
+
+CREATE TRIGGER bef_delete_2 BEFORE DELETE ON Orders
+BEGIN
+	SELECT RAISE(ABORT, 'ERROR: Records cannot be deleted.');
+END;
+
+CREATE TRIGGER bef_delete_3 BEFORE DELETE ON Reviews
+BEGIN
+	SELECT RAISE(ABORT, 'ERROR: Records cannot be deleted.');
+END;
+
+CREATE TRIGGER bef_delete_4 BEFORE DELETE ON Products
+BEGIN
+	SELECT RAISE(ABORT, 'ERROR: Records cannot be deleted.');
+END;
+
+--Inserting values
+INSERT INTO Customers (UserId, Location)
+SELECT UserId, Location
+FROM amazon
+
+DELETE FROM Customers
+WHERE
+  (UserId IS NULL OR UserId  = '')
+  
+INSERT INTO Products(ProductId, Category, SubCategory, Brand, ProdDescription)
+SELECT    ProductId, Category, SubCategory, Brand, ProdDescription
+FROM temp_products
+
+DROP TABLE temp_products
+
+INSERT INTO Orders(BillingId, ProdDescription, UserId, ProductId)
+SELECT    BillingId, ProdDescription, UserId, ProductId
+FROM temp_orders
+
+DROP TABLE temp_orders
+
