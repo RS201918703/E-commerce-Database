@@ -29,6 +29,6 @@ With our initial goal in mind, our database did a good job at serving customers 
 2. [Entity-relationship modelling](https://www.guru99.com/er-diagram-tutorial-dbms.html)
 3. [SQL Rank functions](https://www.sqlshack.com/overview-of-sql-rank-functions/)
 4. [Foreign keys and referential identity](https://www1.udel.edu/evelyn/Sybase-02/triggers3.html)
-5. [An explanation of view](https://www.sqlshack.com/sql-view-a-complete-introduction-and-walk-through/)
+5. [An explanation of views](https://www.sqlshack.com/sql-view-a-complete-introduction-and-walk-through/)
 6. [Pandas Dataframes](https://pandas.pydata.org/docs/reference/api/pandas.read_sql_query.html)
 7. [Subqueries](https://mode.com/sql-tutorial/sql-sub-queries/)
