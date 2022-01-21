@@ -1,7 +1,5 @@
 # An Insight into an E-Commerce Database (ST207 Project)
-### Overview
-
-### Motivation
+### Overview and motivation
 We wanted to mimic a database of a huge e-commerce site like Amazon. We identified how a huge database like Amazon's could be broken down into operations and insights. We decided to focus on the insights portion because there is more room to interpret results. So, this database serves both customers and producers with insights into products.
 
 ### Description
