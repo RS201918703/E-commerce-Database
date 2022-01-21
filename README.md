@@ -5,11 +5,11 @@ We wanted to mimic a database of a huge e-commerce site like Amazon. We identifi
 ![Image1](https://github.com/RS201918703/ST207-Database-Project/blob/main/figs/DBBrowser%20fig.png)
 
 ### Description
-The entire project was written with SQLite on DBBrowser. We established a connection from our ST207Database.ipynb file to do this. The dataset here has already been cleaned before inserting into the database, you can find the original dataset here: https://app.datastock.shop/?site_name=Amazon.com_Product_Reviews (You will need an account to download this). We have also added additional data from here: https://www.kaggle.com/promptcloud/amazon-product-reviews-dataset
+The entire project was written with SQLite on DBBrowser. We established a connection from our [ST207Database.ipynb](https://github.com/RS201918703/ST207-Database-Project/blob/main/ST207Database.ipynb) file to do this. The dataset here has already been cleaned before inserting into the database, you can find the original dataset here: https://app.datastock.shop/?site_name=Amazon.com_Product_Reviews (You will need an account to download this). We have also added additional data from here: https://www.kaggle.com/promptcloud/amazon-product-reviews-dataset
 
 ### How to run
-- Run the code in ST207Database.ipynb on Google Colab
-- Before running, import amazon.csv into the environment
+- Run the code in [ST207Database.ipynb](https://github.com/RS201918703/ST207-Database-Project/blob/main/ST207Database.ipynb) on Google Colab
+- Before running, import [amazon.csv](https://github.com/RS201918703/ST207-Database-Project/blob/main/amazon.csv) into the environment
 
 ### Improvements
 - Deletion rules: Realistically, the database should've allowed for deletions. Especially for ethical reasons, customers may not want their data stored there forever to be used by others
