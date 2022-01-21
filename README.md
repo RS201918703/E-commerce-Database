@@ -25,7 +25,9 @@ With our initial goal in mind, our database did a good job at serving customers 
 - Rafay Butt: https://github.com/raf201920011
 
 ### References
-1. [Entity-relationship modelling](https://www.guru99.com/er-diagram-tutorial-dbms.html)
-2. [An explanation of view](https://www.sqlshack.com/sql-view-a-complete-introduction-and-walk-through/)
-3. [Pandas Dataframes](https://pandas.pydata.org/docs/reference/api/pandas.read_sql_query.html)
-4. [Subqueries](https://mode.com/sql-tutorial/sql-sub-queries/)
+1. [Database designing](https://thedigitalskye.com/2020/12/19/8-practical-guidelines-for-designing-databases-that-dont-land-you-in-hot-water/)
+2. [Entity-relationship modelling](https://www.guru99.com/er-diagram-tutorial-dbms.html)
+3. [SQL Rank functions](https://www.sqlshack.com/overview-of-sql-rank-functions/)
+4. [An explanation of view](https://www.sqlshack.com/sql-view-a-complete-introduction-and-walk-through/)
+5. [Pandas Dataframes](https://pandas.pydata.org/docs/reference/api/pandas.read_sql_query.html)
+6. [Subqueries](https://mode.com/sql-tutorial/sql-sub-queries/)
