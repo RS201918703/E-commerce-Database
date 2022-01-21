@@ -1,4 +1,4 @@
---Creating the tables
+--First, creating the tables
   
   CREATE TABLE IF NOT EXISTS Customers (
 	UserId TEXT PRIMARY KEY,
