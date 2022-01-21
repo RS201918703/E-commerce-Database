@@ -22,6 +22,7 @@ With our initial goal in mind, our database did a good job at serving customers 
 
 ### Team members
 - Chris Twomey: https://github.com/christwm201914523
+- Rachel Soh: https://github.com/RS201918703
 - Rafay Butt: https://github.com/raf201920011
 
 ### References
