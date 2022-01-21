@@ -1,14 +1,14 @@
-# ST207SQLProject
-## Overview
+# An Insight into an E-Commerce Database (ST207 Project)
+### Overview
 
-## Motivation
+### Motivation
 
 ## Description
 
-## How to run
+### How to run
 
-## Improvements
+### Improvements
 
-## Conclusion
+### Conclusion
 
-## Team members
+### Team members
