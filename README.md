@@ -6,8 +6,8 @@
 ### Description
 
 ### How to run
-- Run the code in ST207Database.ipynb
-- Before running
+- Run the code in ST207Database.ipynb on Google Colab
+- Before running, import amazon.csv into the environment
 
 ### Improvements
 
