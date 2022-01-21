@@ -12,6 +12,6 @@
 ### Conclusion
 
 ### Team members
-Chris Twomey: https://github.com/christwm201914523
-Rafay Butt: https://github.com/raf201920011
+- Chris Twomey: https://github.com/christwm201914523
+- Rafay Butt: https://github.com/raf201920011
 
