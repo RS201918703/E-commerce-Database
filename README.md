@@ -20,5 +20,7 @@ The entire project was written with SQLite on DBBrowser. We established a connec
 - Rafay Butt: https://github.com/raf201920011
 
 ### References
-1. [Pandas Dataframes](https://pandas.pydata.org/docs/reference/api/pandas.read_sql_query.html)
-2. [Subqueries](https://mode.com/sql-tutorial/sql-sub-queries/)
+1. [Entity-relationship modelling](https://www.guru99.com/er-diagram-tutorial-dbms.html)
+2. [An explanation of view](https://www.sqlshack.com/sql-view-a-complete-introduction-and-walk-through/)
+3. [Pandas Dataframes](https://pandas.pydata.org/docs/reference/api/pandas.read_sql_query.html)
+4. [Subqueries](https://mode.com/sql-tutorial/sql-sub-queries/)
