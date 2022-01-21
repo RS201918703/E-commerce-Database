@@ -239,5 +239,24 @@ VALUES ('New test','Title','June',4.0,'OK','5','AECRD4GDEG7RBMTQDOXCEN6NT74Q','1
 --Testing trigger 4
 DELETE FROM Customers;
 
+--Query
+SELECT RMonth, round(avg(RRating),1)  As 'Average Rating'
+FROM Reviews
+GROUP BY RMonth
+ORDER BY case when RMonth = 'January' then 1
+              when RMonth = 'February' then 2
+              when RMonth = 'March' then 3
+              when RMonth = 'April' then 4
+              when RMonth = 'May' then 5
+              when RMonth = 'June' then 6
+              when RMonth = 'July' then 7
+              when RMonth = 'August' then 8
+              when RMonth = 'September' then 9
+              when RMonth = 'October' then 10
+              when RMonth = 'November' then 11
+              else 12
+         end;
+
+
 
 
