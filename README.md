@@ -19,3 +19,5 @@ The entire project was written with SQLite on DBBrowser. We established a connec
 - Chris Twomey: https://github.com/christwm201914523
 - Rafay Butt: https://github.com/raf201920011
 
+### References
+1. Subqueries(https://mode.com/sql-tutorial/sql-sub-queries/)
