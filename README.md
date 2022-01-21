@@ -6,6 +6,8 @@
 ### Description
 
 ### How to run
+- Run the code in ST207Database.ipynb
+- Before running
 
 ### Improvements
 
