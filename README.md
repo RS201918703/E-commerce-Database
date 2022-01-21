@@ -20,4 +20,5 @@ The entire project was written with SQLite on DBBrowser. We established a connec
 - Rafay Butt: https://github.com/raf201920011
 
 ### References
-1. [Subqueries](https://mode.com/sql-tutorial/sql-sub-queries/)
+1. [Pandas Dataframes](https://pandas.pydata.org/docs/reference/api/pandas.read_sql_query.html)
+2. [Subqueries](https://mode.com/sql-tutorial/sql-sub-queries/)
