@@ -15,7 +15,7 @@ The entire project was written with SQLite on DBBrowser. We established a connec
 - Deletion rules: Realistically, the database should've allowed for deletions. Especially for ethical reasons, customers may not want their data stored there forever to be used by others
 - Extra restrictions: For instance, in the Products table, a restriction to ensure Categories and Subcategories would have been useful
 - Dropping information: For the database to work, we had to drop a lot of data with null values. But in reality, data often have these kinds of gaps and an improvement we could've made is to find another way to work with the empty values
-- Reviews interpretations: We could have scanned through review contents to make new analyses 
+- Reviews interpretations: We could have scanned through review contents to make more analyses
 
 ### Conclusion
 With our initial goal in mind, our database did a good job at serving customers and producers with insights. Evidence is shown in all the query outputs. However, we did see that there were a couple of things that would become a problem if brought into a real-life setting.
